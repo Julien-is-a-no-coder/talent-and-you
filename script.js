@@ -4,11 +4,31 @@
 
 (() => {
   // ============ SCROLL RESET — keep hero in view on (re)load ============
-  // The browser's automatic scroll-restoration can land users below the hero
-  // after a reload or back-nav. Disable it and force the top, unless the URL
-  // explicitly points to an anchor.
+  // Mobile browsers (iOS Safari especially) restore scroll position later in
+  // the load cycle than our initial reset, AND `scroll-behavior: smooth` on
+  // <html> can animate the reset away. Robust fix: disable smooth temporarily,
+  // force the top at multiple lifecycle moments.
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  if (!location.hash) window.scrollTo(0, 0);
+
+  const html = document.documentElement;
+  const forceTop = () => {
+    if (location.hash) return;
+    const prev = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'auto';
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    html.scrollTop = 0;
+    // Restore smooth after the next frame so anchor clicks still animate.
+    requestAnimationFrame(() => { html.style.scrollBehavior = prev; });
+  };
+
+  forceTop();
+  window.addEventListener('load', () => {
+    forceTop();
+    requestAnimationFrame(forceTop);
+  });
+  // Back/forward cache restore — fires on iOS when returning to the tab.
+  window.addEventListener('pageshow', (e) => { if (e.persisted) forceTop(); });
 
   // ============ NAV scrolled state ============
   const nav = document.querySelector('.nav');
