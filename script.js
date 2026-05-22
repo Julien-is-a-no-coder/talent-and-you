@@ -3,6 +3,13 @@
    ============================================================ */
 
 (() => {
+  // ============ SCROLL RESET — keep hero in view on (re)load ============
+  // The browser's automatic scroll-restoration can land users below the hero
+  // after a reload or back-nav. Disable it and force the top, unless the URL
+  // explicitly points to an anchor.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (!location.hash) window.scrollTo(0, 0);
+
   // ============ NAV scrolled state ============
   const nav = document.querySelector('.nav');
   const onScroll = () => {
@@ -13,6 +20,9 @@
   onScroll();
 
   // ============ REVEAL on scroll ============
+  // Tighter threshold on mobile (smaller viewport ⇒ trigger sooner so the
+  // cascade animation can play fully before content stops moving).
+  const isMobile = window.matchMedia('(max-width: 820px)').matches;
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -20,7 +30,10 @@
         if (e.target.dataset.once !== 'no') io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  }, {
+    threshold: isMobile ? 0.05 : 0.12,
+    rootMargin: isMobile ? '0px 0px 5% 0px' : '0px 0px -8% 0px'
+  });
   document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
 
   // ============ COUNTERS ============
