@@ -249,23 +249,6 @@ p { margin: 0; text-wrap: pretty; }
 }
 .hero-headline .l2 span { animation-delay: .35s; }
 @keyframes rise { to { transform: translateY(0); } }
-.hero-headline .stop {
-  display: inline-block;
-  font-family: var(--f-mono); font-size: 0.24em; vertical-align: 0.92em;
-  margin-left: 0.06em;
-  background: var(--grad);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: stopPulse 2.4s ease-in-out infinite;
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--brand-mid) 65%, transparent));
-  transform-origin: center;
-}
-@keyframes stopPulse {
-  0%, 100% { opacity: 0.55; background-position: 0% 50%;   transform: scale(1);    }
-  50%     { opacity: 1;    background-position: 100% 50%; transform: scale(1.35); }
-}
 .hero-tag {
   margin-top: 32px; max-width: 480px;
   font-size: clamp(16px, 1.2vw, 19px); color: var(--ink-soft); line-height: 1.45;
