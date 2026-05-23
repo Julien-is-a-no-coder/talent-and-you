@@ -7,7 +7,7 @@
   /* Palette — Signature (default) */
   --ink: #0B0E27;
   --ink-soft: #2A2F4A;
-  --muted: #6B7088;
+  --muted: #5C6178; /* WCAG AA: 4.94:1 on the cream bg (was 4.08:1) */
   --line: rgba(11, 14, 39, 0.08);
   --line-strong: rgba(11, 14, 39, 0.18);
   --bg: #F6F3EC;
