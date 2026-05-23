@@ -252,8 +252,17 @@ p { margin: 0; text-wrap: pretty; }
 .hero-headline .stop {
   display: inline-block;
   font-family: var(--f-mono); font-size: 0.28em; vertical-align: 0.78em;
-  color: var(--muted);
   margin-left: 0.05em;
+  background: var(--grad);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: stopPulse 2.6s ease-in-out infinite;
+}
+@keyframes stopPulse {
+  0%, 100% { opacity: 0.45; background-position: 0% 50%; }
+  50%     { opacity: 1;    background-position: 100% 50%; }
 }
 .hero-tag {
   margin-top: 32px; max-width: 480px;
@@ -332,7 +341,7 @@ p { margin: 0; text-wrap: pretty; }
 }
 @keyframes glowPulse { 0%,100% { opacity: .6; } 50% { opacity: 1; } }
 
-/* Constellation particles */
+/* Constellation particles — inside hero-art, around the blob & tags */
 .hero-particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .hero-particles .p {
   position: absolute; width: 4px; height: 4px; border-radius: 50%;
@@ -340,10 +349,32 @@ p { margin: 0; text-wrap: pretty; }
   opacity: 0;
   animation: twinkle 4s ease-in-out infinite;
 }
-.hero-particles .p.acc { background: var(--brand-2); }
+.hero-particles .p.acc  { background: var(--brand-2); }
+.hero-particles .p.tiny { width: 2px; height: 2px; animation: twinkleSoft 5.5s ease-in-out infinite; }
 @keyframes twinkle {
   0%,100% { opacity: 0; transform: scale(0.6); }
-  50% { opacity: 0.55; transform: scale(1); }
+  50%     { opacity: 0.55; transform: scale(1); }
+}
+@keyframes twinkleSoft {
+  0%,100% { opacity: 0; transform: scale(0.4); }
+  50%     { opacity: 0.28; transform: scale(1); }
+}
+
+/* Background dust — spans the full hero, very subtle */
+.hero-bg-dots { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero-bg-dots .d {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 55%, transparent);
+  opacity: 0;
+  animation: dustDrift 7s ease-in-out infinite;
+}
+.hero-bg-dots .d.s   { width: 2px; height: 2px; }
+.hero-bg-dots .d.l   { width: 4px; height: 4px; }
+.hero-bg-dots .d.acc { background: color-mix(in srgb, var(--brand-mid) 70%, transparent); }
+@keyframes dustDrift {
+  0%, 100% { opacity: 0;    transform: translateY(0)   scale(0.6); }
+  40%      { opacity: 0.22; transform: translateY(-6px) scale(1);   }
+  60%      { opacity: 0.22; transform: translateY(-6px) scale(1);   }
 }
 
 /* Glass tags — solid for high readability */
