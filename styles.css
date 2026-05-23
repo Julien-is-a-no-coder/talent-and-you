@@ -362,29 +362,76 @@ p { margin: 0; text-wrap: pretty; }
   50%     { opacity: 0.28; transform: scale(1); }
 }
 
-/* Background dust — spans the full hero, choreographed drift per dot */
+/* Background dust — long travelling trajectories across the hero */
 .hero-bg-dots { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .hero-bg-dots .d {
   position: absolute; width: 4px; height: 4px; border-radius: 50%;
   background: var(--ink);
   opacity: 0;
-  animation: dustFloat var(--dur, 8s) ease-in-out infinite;
+  animation-duration: var(--dur, 12s);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
   box-shadow: 0 0 6px color-mix(in srgb, var(--ink) 30%, transparent);
   will-change: transform, opacity;
 }
 .hero-bg-dots .d.s    { width: 3px; height: 3px; }
 .hero-bg-dots .d.l    { width: 6px; height: 6px; }
-/* Accents pick up the brand gradient stops */
 .hero-bg-dots .d.acc  { background: var(--brand-mid); box-shadow: 0 0 8px color-mix(in srgb, var(--brand-mid) 60%, transparent); }
 .hero-bg-dots .d.acc2 { background: var(--brand-1);   box-shadow: 0 0 8px color-mix(in srgb, var(--brand-1)   60%, transparent); }
 .hero-bg-dots .d.acc3 { background: var(--brand-2);   box-shadow: 0 0 8px color-mix(in srgb, var(--brand-2)   60%, transparent); }
 
-/* Each dot drifts toward its own (--dx, --dy) target, fades in/out along the way */
-@keyframes dustFloat {
-  0%, 100% { opacity: 0;    transform: translate(0, 0) scale(0.4); }
-  25%      { opacity: 0.35; transform: translate(calc(var(--dx, 0px) * .45), calc(var(--dy, 0px) * .45)) scale(1);   }
-  50%      { opacity: 0.55; transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(1.12); }
-  75%      { opacity: 0.35; transform: translate(calc(var(--dx, 0px) * .45), calc(var(--dy, 0px) * .45)) scale(1);   }
+/* 6 distinct trajectories. Dots fade in at the start, drift, fade out at
+   the end of the path — the invisible "teleport" back to origin happens
+   while opacity is already 0, so the loop feels continuous, not bouncy. */
+.hero-bg-dots .d.p1 { animation-name: drift1; }
+.hero-bg-dots .d.p2 { animation-name: drift2; }
+.hero-bg-dots .d.p3 { animation-name: drift3; }
+.hero-bg-dots .d.p4 { animation-name: drift4; }
+.hero-bg-dots .d.p5 { animation-name: drift5; }
+.hero-bg-dots .d.p6 { animation-name: drift6; }
+
+@keyframes drift1 {  /* right + up — toward the blob */
+  0%   { opacity: 0;    transform: translate(0,     0)     scale(.4); }
+  15%  { opacity: 0.45; transform: translate(45px,  -30px) scale(1);  }
+  50%  { opacity: 0.65; transform: translate(130px, -70px) scale(1.1); }
+  85%  { opacity: 0.4;  transform: translate(220px, -100px) scale(.9); }
+  100% { opacity: 0;    transform: translate(300px, -140px) scale(.4); }
+}
+@keyframes drift2 {  /* right + down */
+  0%   { opacity: 0;    transform: translate(0,     0)    scale(.4); }
+  15%  { opacity: 0.5;  transform: translate(40px,  35px) scale(1);  }
+  50%  { opacity: 0.6;  transform: translate(120px, 80px) scale(1.1); }
+  85%  { opacity: 0.4;  transform: translate(200px, 120px) scale(.9); }
+  100% { opacity: 0;    transform: translate(280px, 160px) scale(.4); }
+}
+@keyframes drift3 {  /* left + up */
+  0%   { opacity: 0;    transform: translate(0,      0)    scale(.4); }
+  15%  { opacity: 0.45; transform: translate(-35px,  -30px) scale(1);  }
+  50%  { opacity: 0.6;  transform: translate(-100px, -75px) scale(1.1); }
+  85%  { opacity: 0.4;  transform: translate(-170px, -110px) scale(.9); }
+  100% { opacity: 0;    transform: translate(-240px, -150px) scale(.4); }
+}
+@keyframes drift4 {  /* left + down */
+  0%   { opacity: 0;    transform: translate(0,      0)    scale(.4); }
+  15%  { opacity: 0.5;  transform: translate(-30px,  40px) scale(1);  }
+  50%  { opacity: 0.6;  transform: translate(-90px,  95px) scale(1.1); }
+  85%  { opacity: 0.4;  transform: translate(-150px, 135px) scale(.9); }
+  100% { opacity: 0;    transform: translate(-210px, 180px) scale(.4); }
+}
+@keyframes drift5 {  /* wavy right */
+  0%   { opacity: 0;    transform: translate(0,     0)    scale(.4); }
+  20%  { opacity: 0.5;  transform: translate(60px,  -25px) scale(1);  }
+  40%  { opacity: 0.65; transform: translate(120px, 20px) scale(1.1); }
+  60%  { opacity: 0.6;  transform: translate(180px, -15px) scale(1.1); }
+  80%  { opacity: 0.4;  transform: translate(240px, 25px) scale(.9); }
+  100% { opacity: 0;    transform: translate(320px, 0)    scale(.4); }
+}
+@keyframes drift6 {  /* mostly upward — escapes to the top */
+  0%   { opacity: 0;    transform: translate(0,    0)     scale(.4); }
+  20%  { opacity: 0.5;  transform: translate(15px, -50px) scale(1);  }
+  50%  { opacity: 0.6;  transform: translate(25px, -120px) scale(1.1); }
+  80%  { opacity: 0.4;  transform: translate(10px, -190px) scale(.9); }
+  100% { opacity: 0;    transform: translate(0,    -260px) scale(.4); }
 }
 
 /* Glass tags — solid for high readability */
