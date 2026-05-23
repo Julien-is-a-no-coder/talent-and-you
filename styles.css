@@ -362,22 +362,29 @@ p { margin: 0; text-wrap: pretty; }
   50%     { opacity: 0.28; transform: scale(1); }
 }
 
-/* Background dust — spans the full hero */
+/* Background dust — spans the full hero, choreographed drift per dot */
 .hero-bg-dots { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .hero-bg-dots .d {
   position: absolute; width: 4px; height: 4px; border-radius: 50%;
   background: var(--ink);
   opacity: 0;
-  animation: dustDrift 6s ease-in-out infinite;
+  animation: dustFloat var(--dur, 8s) ease-in-out infinite;
   box-shadow: 0 0 6px color-mix(in srgb, var(--ink) 30%, transparent);
+  will-change: transform, opacity;
 }
-.hero-bg-dots .d.s   { width: 3px; height: 3px; }
-.hero-bg-dots .d.l   { width: 6px; height: 6px; }
-.hero-bg-dots .d.acc { background: var(--brand-mid); box-shadow: 0 0 8px color-mix(in srgb, var(--brand-mid) 55%, transparent); }
-@keyframes dustDrift {
-  0%, 100% { opacity: 0;    transform: translateY(0)    scale(0.5); }
-  45%      { opacity: 0.45; transform: translateY(-8px) scale(1);   }
-  55%      { opacity: 0.45; transform: translateY(-8px) scale(1);   }
+.hero-bg-dots .d.s    { width: 3px; height: 3px; }
+.hero-bg-dots .d.l    { width: 6px; height: 6px; }
+/* Accents pick up the brand gradient stops */
+.hero-bg-dots .d.acc  { background: var(--brand-mid); box-shadow: 0 0 8px color-mix(in srgb, var(--brand-mid) 60%, transparent); }
+.hero-bg-dots .d.acc2 { background: var(--brand-1);   box-shadow: 0 0 8px color-mix(in srgb, var(--brand-1)   60%, transparent); }
+.hero-bg-dots .d.acc3 { background: var(--brand-2);   box-shadow: 0 0 8px color-mix(in srgb, var(--brand-2)   60%, transparent); }
+
+/* Each dot drifts toward its own (--dx, --dy) target, fades in/out along the way */
+@keyframes dustFloat {
+  0%, 100% { opacity: 0;    transform: translate(0, 0) scale(0.4); }
+  25%      { opacity: 0.35; transform: translate(calc(var(--dx, 0px) * .45), calc(var(--dy, 0px) * .45)) scale(1);   }
+  50%      { opacity: 0.55; transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(1.12); }
+  75%      { opacity: 0.35; transform: translate(calc(var(--dx, 0px) * .45), calc(var(--dy, 0px) * .45)) scale(1);   }
 }
 
 /* Glass tags — solid for high readability */
